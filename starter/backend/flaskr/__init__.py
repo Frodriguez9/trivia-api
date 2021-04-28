@@ -77,7 +77,7 @@ def create_app(test_config=None):
                              for category in Category.query.all()]
 
             if (int(category_id) not in categories_id
-            and int(category_id) != 0):
+              and int(category_id) != 0):
                 abort(404)
 
             filters = []
@@ -85,6 +85,16 @@ def create_app(test_config=None):
                 filters.append(~Question.id.in_(previous_questions))
             if int(category_id) != 0:
                 filters.append(Question.category == str(category_id))
+
+            ''' NOTE: The current set up is to play 5 questions per quiz.
+
+                IMPORTANT: If the user selects a given category,
+                e.g: science, and there are less than 5 questions of
+                that category, all the science questions will be promped
+                first. So, if there are only 3 science questions, they will
+                be exausted first when taking the quiz. The remaining 2
+                questions will be selected from any category, so that the
+                player has a full game of 5 total questions.'''
 
             questions = Question.query.filter(*filters).all()
             if len(questions) == 0:  # when the category runs out of questions
@@ -160,7 +170,7 @@ def create_app(test_config=None):
                 return jsonify({'success': True,
                                 'total_questions': total_questions,
                                 'matched_questions': len(matched_questions),
-                                'questions': current_questions  # REMEMBER to put in documentation that pagination is allow /questions?page=1, json={'search': 'bla'}
+                                'questions': current_questions
                                 })
 
             # When route is used for posting a new question
