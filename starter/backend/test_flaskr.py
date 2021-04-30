@@ -141,7 +141,6 @@ class TriviaTestCase(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(data['matched_questions'], 3)
 
     def test_200_post_new_question(self):
         res = self.client().post('/questions', json=self.new_question)

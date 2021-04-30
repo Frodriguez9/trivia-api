@@ -145,10 +145,8 @@ Request Arguments:
 
 Returns: An object with 5 keys:
 
-	- ‘previousQuestions’ with a list of questions ids of type integer or null
 	- ‘question’ with a value of dictionary type containing all information about the question
-	- ‘question_id’ with an integer value
-	- ‘quizCategory’ with an integer value of the category id.
+	- ‘categories’ a list of dictionaries with category_id-category_name key-value pairs
 	- ‘success’ with a boolean true 
 
 #### Sample Request:
@@ -157,21 +155,43 @@ curl 'http://127.0.0.1:5000/categories' -X POST -H 'Content-Type:application/jso
 
 #### Response body:
 
-  {
-    "previousQuestions": [
-      18
-    ],
-    "question": {
-      "answer": "Escher",
-      "category": 2,
-      "difficulty": 1,
-      "id": 16,
-      "question": "Which Dutch graphic artist\u2013initials M C was a creator of optical illusions?"
+{
+  "categories": [
+    {
+      "id": 1,
+      "type": "Science"
     },
-    "question_id": 16,
-    "quizCategory": 2,
-    "success": true
-   }
+    {
+      "id": 2,
+      "type": "Art"
+    },
+    {
+      "id": 3,
+      "type": "Geography"
+    },
+    {
+      "id": 4,
+      "type": "History"
+    },
+    {
+      "id": 5,
+      "type": "Entertainment"
+    },
+    {
+      "id": 6,
+      "type": "Sports"
+    }
+  ],
+  "question": {
+    "answer": "Mona Lisa",
+    "category": 2,
+    "difficulty": 3,
+    "id": 17,
+    "question": "La Giaconda is better known as what?"
+  },
+  "success": true
+}
+
 
 ### GET '/questions'
 

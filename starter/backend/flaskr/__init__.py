@@ -70,6 +70,9 @@ def create_app(test_config=None):
             if data is None:
                 abort(400)
 
+            categories = [category.format() for category
+                          in Category.query.all()]
+
             category_id = data['quiz_category'].get('id', 0)
             previous_questions = data.get('previous_questions', None)
 
@@ -86,29 +89,19 @@ def create_app(test_config=None):
             if int(category_id) != 0:
                 filters.append(Question.category == str(category_id))
 
-            ''' NOTE: The current set up is to play 5 questions per quiz.
+            questions = Question.query.filter(*filters)\
+                .order_by(Question.id).all()
 
-                IMPORTANT: If the user selects a given category,
-                e.g: science, and there are less than 5 questions of
-                that category, all the science questions will be promped
-                first. So, if there are only 3 science questions, they will
-                be exausted first when taking the quiz. The remaining 2
-                questions will be selected from any category, so that the
-                player has a full game of 5 total questions.'''
+            try:
+                game_question = random.choice(questions).format()
 
-            questions = Question.query.filter(*filters).all()
-            if len(questions) == 0:  # when the category runs out of questions
-                questions = Question.query\
-                    .filter(~Question.id.in_(previous_questions)).all()
-
-            game_question = random.choice(questions).format()
+            except IndexError:
+                game_question = None
 
             return jsonify({
                 'success': True,
-                'previousQuestions': previous_questions,
+                'categories': categories,
                 'question': game_question,
-                'question_id': game_question['id'],
-                'quizCategory': category_id
             })
 
     @app.route('/questions', methods=['GET', 'POST'])
